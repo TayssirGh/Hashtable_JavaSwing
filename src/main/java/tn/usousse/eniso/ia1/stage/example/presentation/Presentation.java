@@ -5,10 +5,28 @@ import tn.usousse.eniso.ia1.stage.example.model.Table;
 import tn.usousse.eniso.ia1.stage.example.service.Service;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.util.Scanner;
 
 public class Presentation {
+    int size;
+
     public Presentation() {
+    }
+    private JScrollPane drawTable(int size ){
+
+        // Data to be displayed in the JTable
+        String[][] data = new String[size][1];
+
+        // Column Names
+        String[] columnNames = { "Name" };
+
+        // Initializing the JTable
+        JTable j = new JTable(data, columnNames);
+        TableColumn column = j.getColumnModel().getColumn(0);
+        column.setPreferredWidth(2);
+
+        return new JScrollPane(j);
     }
 
     public  void console(){
@@ -19,20 +37,41 @@ public class Presentation {
 //        creating the header
         JMenuBar mb=new JMenuBar();
         JMenu menu =new JMenu("file");
-        JMenu menu1 = new JMenu("help");
+        JMenu help = new JMenu("help");
+        JMenuItem about = new JMenuItem("about");
         JMenuItem n=new JMenuItem("size ");
         JMenuItem add=new JMenuItem("add");
         menu.add(n);
         menu.add(add);
+        help.add(about);
         mb.add(menu);
-        mb.add(menu1);
+        mb.add(help);
         f.setJMenuBar(mb);
 
-//            creating the dialog
-        JDialog d = new JDialog(f, "add size");
+
+//            creating the size dialog
+        n.addActionListener(e -> {
+            String sizeText = JOptionPane.showInputDialog(f, "");
+            if (sizeText != null) {
+                this.size = Integer.parseInt(sizeText);
+                JScrollPane sp = drawTable(this.size);
+                p.add(sp);
+
+                f.getContentPane().add(p);
+                // Frame Visible = true
+                f.setVisible(true);
+            }
+        });
+        about.addActionListener(e -> {
+            JOptionPane.showMessageDialog(f, "Enter the size:");
+
+        });
+
+
 
 
         f.setSize(500,300);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
 
         Scanner sc = new Scanner(System.in);
@@ -87,8 +126,7 @@ public class Presentation {
 
                     System.out.println(service.hash(name));
                     break;
-                case "break":
-                    break;
+
                 default:
                     System.out.println("invalid command");
             }

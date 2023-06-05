@@ -13,22 +13,22 @@ public class Service {
     }
 
     public boolean exists(String value, Table table){
-        int i = hash(value);
-        Node n = table.getNodes()[i];
-        while ( n != null){
-            if (n.getValue().equals(value)){
+        int index = hash(value);
+        Node node = table.getNodes()[index];
+        while ( node != null){
+            if (node.getValue().equals(value)){
                 return true;
             }
-            n = n.getNext();
+            node = node.getNext();
         }
         return false;
     }
     public int hash(String value){
-        int i =0;
+        int index =0;
         for(int j = 0; j<value.length(); j++){
-            i+=(int) value.charAt(j);
+            index+= value.charAt(j);
         }
-        return Math.abs(i%3);
+        return Math.abs(index%3);
     }
 
 
@@ -37,20 +37,20 @@ public class Service {
             return false;
         }
 
-        int i = hash(value);
-        Node n = new Node(value);
+        int index = hash(value);
+        Node node = new Node(value);
 
-        if (this.table.getNodes()[i] == null) {
-            this.table.getNodes()[i] = n;
+        if (this.table.getNodes()[index] == null) {
+            this.table.getNodes()[index] = node;
 
         }
 
         else {
-            Node currentNode = this.table.getNodes()[i];
+            Node currentNode = this.table.getNodes()[index];
             while (currentNode.getNext() != null) {
                 currentNode = currentNode.getNext();
             }
-            currentNode.setNext(n);
+            currentNode.setNext(node);
         }
 
         return true;
