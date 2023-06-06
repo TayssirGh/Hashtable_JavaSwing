@@ -1,72 +1,68 @@
 package tn.usousse.eniso.ia1.stage.example.presentation.controller;
 
-import tn.usousse.eniso.ia1.stage.example.presentation.model.Node;
-import tn.usousse.eniso.ia1.stage.example.presentation.model.Table;
+import tn.usousse.eniso.ia1.stage.example.model.Table;
 import tn.usousse.eniso.ia1.stage.example.presentation.view.HashtableDrawComponent;
 import tn.usousse.eniso.ia1.stage.example.service.Service;
 
 import javax.swing.*;
-import javax.swing.table.TableColumn;
-import java.util.Scanner;
 
 public class Presentation {
-    int size;
-
-    public Presentation() {
-    }
+    private int size;
 
 
-
-    public  void console(){
+    public void showPresentation() {
         JFrame f = new JFrame();
         f.setTitle("SWING");
-
+        Service service = new Service(new Table(10));
+        HashtableDrawComponent drawComponent = new HashtableDrawComponent();
+        drawComponent.setModel(service.getTable());
 //        creating the header
-        JMenuBar mb=new JMenuBar();
-        JMenu menu =new JMenu("file");
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("file");
         JMenu help = new JMenu("help");
         JMenuItem about = new JMenuItem("about");
-        JMenuItem n=new JMenuItem("size ");
-        JMenuItem addName=new JMenuItem("add");
+        JMenuItem n = new JMenuItem("size ");
+        JMenuItem addName = new JMenuItem("add");
         menu.add(n);
         menu.add(addName);
         help.add(about);
-        mb.add(menu);
-        mb.add(help);
-        f.setJMenuBar(mb);
+        menuBar.add(menu);
+        menuBar.add(help);
+        f.setJMenuBar(menuBar);
+        f.add(drawComponent);
+        f.setVisible(true);
 
 
 //            creating the dialogs
         n.addActionListener(e -> {
             String sizeText = JOptionPane.showInputDialog(f, "Size: ");
             if (sizeText != null) {
-                this.size = Integer.parseInt(sizeText);
-                HashtableDrawComponent drawComponent = new HashtableDrawComponent();
-                drawComponent.setSize(size);
-                f.add(drawComponent);
-                f.setVisible(true);
+                try {
+                    this.size = Integer.parseInt(sizeText);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Aib Alik", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Table table = new Table(size);
+                service.setTable(table);
+                drawComponent.setModel(table);
 
             }
         });
-        about.addActionListener(e -> {
-            JOptionPane.showMessageDialog(f, "Tayssir");
-
-        });
-        addName.addActionListener(e ->{
+        about.addActionListener(e -> JOptionPane.showMessageDialog(f, "Tayssir"));
+        addName.addActionListener(e -> {
             String name = JOptionPane.showInputDialog(f, "Name");
-            HashtableDrawComponent drawComponent = new HashtableDrawComponent();
-            drawComponent.setName(name);
-
-
+            if (name != null) {
+                service.add(name);
+                int index = service.hash(name);
+                drawComponent.setIndex(index);
+                drawComponent.setModel(drawComponent.getModel());
+            }
         });
-
-
-
-
-
-        f.setSize(700,500);
+        f.pack();
+        f.setSize(700, 500);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
-
-
-}}
+        System.out.println();
+    }
+}

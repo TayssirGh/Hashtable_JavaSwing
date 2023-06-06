@@ -1,4 +1,4 @@
-package tn.usousse.eniso.ia1.stage.example.presentation.model;
+package tn.usousse.eniso.ia1.stage.example.model;
 
 
 

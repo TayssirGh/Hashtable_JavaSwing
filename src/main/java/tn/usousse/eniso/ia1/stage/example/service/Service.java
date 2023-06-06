@@ -1,15 +1,23 @@
 package tn.usousse.eniso.ia1.stage.example.service;
 
-import tn.usousse.eniso.ia1.stage.example.presentation.model.Node;
-import tn.usousse.eniso.ia1.stage.example.presentation.model.Table;
+import tn.usousse.eniso.ia1.stage.example.model.Node;
+import tn.usousse.eniso.ia1.stage.example.model.Table;
 
 import java.lang.Math;
 public class Service {
-    private final Table table;
+    private Table table;
 
     public Service(Table t){
 
         this.table = t;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
     }
 
     public boolean exists(String value, Table table){
@@ -27,6 +35,7 @@ public class Service {
         int index =0;
         for(int j = 0; j<value.length(); j++){
             index+= value.charAt(j);
+            index = index * 31;
         }
         return Math.abs(index%3);
     }
