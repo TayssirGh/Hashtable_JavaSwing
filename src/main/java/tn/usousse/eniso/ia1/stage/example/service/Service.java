@@ -1,7 +1,7 @@
 package tn.usousse.eniso.ia1.stage.example.service;
 
-import tn.usousse.eniso.ia1.stage.example.model.Node;
-import tn.usousse.eniso.ia1.stage.example.model.Table;
+import tn.usousse.eniso.ia1.stage.example.presentation.model.Node;
+import tn.usousse.eniso.ia1.stage.example.presentation.model.Table;
 
 import java.lang.Math;
 public class Service {

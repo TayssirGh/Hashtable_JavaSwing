@@ -1,9 +1,8 @@
-package tn.usousse.eniso.ia1.stage.example.model;
+package tn.usousse.eniso.ia1.stage.example.presentation.model;
 
 
 
 public class Table{
-
     public Table() {
     }
 
