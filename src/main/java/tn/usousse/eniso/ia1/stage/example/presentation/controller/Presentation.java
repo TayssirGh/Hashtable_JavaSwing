@@ -5,6 +5,8 @@ import tn.usousse.eniso.ia1.stage.example.presentation.view.HashtableDrawCompone
 import tn.usousse.eniso.ia1.stage.example.service.Service;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Presentation {
     private int size;
@@ -57,6 +59,19 @@ public class Presentation {
                 int index = service.hash(name);
                 drawComponent.setIndex(index);
                 drawComponent.setModel(drawComponent.getModel());
+            }
+        });
+
+        drawComponent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getX() >= drawComponent.getxMin() && e.getX() <= drawComponent.getxMax()&&
+                        e.getY() >= drawComponent.getyMin() && e.getY() <= drawComponent.getyMax()){
+                    String name = drawComponent.getDelName();
+                    service.remove(name);
+                    drawComponent.setModel(drawComponent.getModel());
+                }
+
             }
         });
         f.pack();
