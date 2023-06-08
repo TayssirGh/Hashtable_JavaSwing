@@ -10,12 +10,16 @@ import java.awt.event.MouseEvent;
 
 public class HashtableDrawComponent extends JComponent {
     private String delName;
-    int finalNodeX;
     int nodeY;
     int xMax;
     int xMin;
     int yMax;
     int yMin;
+    boolean confirmation = false;
+
+    public boolean isConfirmation() {
+        return confirmation;
+    }
 
     public int getxMax() {
         return xMax;
@@ -33,14 +37,58 @@ public class HashtableDrawComponent extends JComponent {
         return yMin;
     }
 
+    public HashtableDrawComponent() {
+
+    }
+    public void mouseAction(){
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+
+                int tableSize = model.getNodes().length;
+                int caseSize = 100;
+                int startX = (getWidth() - caseSize * 2 - 100) / 2;
+                int startY = (getHeight() - caseSize * tableSize) / 2;
+
+                for (int i = 0; i < tableSize; i++) {
+                    int yNode = startY + i * caseSize;
+                    Node node = model.getNodes()[i];
+
+                    int nodeX = startX + caseSize + 40;
+                    while (node != null) {
+                        int nodeY = yNode + caseSize - 75;
+                        xMin = nodeX;
+                        xMax = nodeX + caseSize - 20;
+                        yMax = nodeY + caseSize - 40;
+                        yMin = nodeY;
+                        if (x >= xMin && x <= xMax && y >= nodeY && y <= yMax) {
+                            String name = node.getValue();
+                            int confirm = JOptionPane.showConfirmDialog(null, "Do you want to remove this node ? " );
+                            if (confirm == JOptionPane.YES_OPTION) {
+                                confirmation = true;
+                                delName = name;
+                            }
+                            return;
+                        }
+
+                        nodeX += caseSize + 20;
+                        node = node.getNext();
+                    }
+                }
+            }
+        });
+    }
+
+
     public String getDelName() {
         return delName;
     }
 
     private Table model = new Table(10);
 
-    public HashtableDrawComponent() {
-    }
+
 
     public Table getModel() {
 
@@ -59,7 +107,17 @@ public class HashtableDrawComponent extends JComponent {
     public void setIndex(int index) {
 
     }
-
+    private void drawNode(Graphics2D g2d, int nodeX , int nodeY, int caseSize, Node n){
+        g2d.drawLine(nodeX,nodeY+25,nodeX - 40,nodeY+25);
+        g2d.drawRect(nodeX, nodeY, caseSize - 20, caseSize - 40);
+        g2d.drawString(n.getValue(), nodeX + 25, nodeY + caseSize - 20);
+        g2d.drawLine(nodeX+caseSize-17,nodeY+25,nodeX +caseSize +20,nodeY+25);
+    }
+    private void drawMsalha(Graphics2D g2d,int lineY, int nodeX){
+        g2d.drawLine(nodeX, lineY + 20, nodeX, lineY - 20);
+        g2d.drawLine(nodeX, lineY + 10, nodeX + 10, lineY + 20);
+        g2d.drawLine(nodeX, lineY - 10, nodeX+ 10, lineY);
+    }
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -73,7 +131,6 @@ public class HashtableDrawComponent extends JComponent {
         int caseSize = 100;
         int tableHeight = caseSize * tableSize;
 
-
         int startX = (getWidth() - caseSize*2-100) / 2;
         int startY = (getHeight() - tableHeight) / 2;
         for (int i = 0; i < tableSize; i++) {
@@ -86,43 +143,18 @@ public class HashtableDrawComponent extends JComponent {
             boolean test = false;
             int nodeX = startX + caseSize + 40;
 
+
             while (n != null) {
                 test = true;
-                 nodeY = y + caseSize - 75;
-                g2d.drawLine(nodeX,nodeY+25,nodeX - 40,nodeY+25);
-                g2d.drawRect(nodeX, nodeY, caseSize - 20, caseSize - 40);
-                g2d.drawString(n.getValue(), nodeX + 25, nodeY + caseSize - 20);
-                g2d.drawLine(nodeX+caseSize-17,nodeY+25,nodeX +caseSize +20,nodeY+25);
+                nodeY = y + caseSize - 75;
+                drawNode(g2d, nodeX,nodeY,caseSize,n);
                 nodeX += caseSize + 20;
-
-                 finalNodeX = nodeX;
-                Node node = n;
-                delName = node.getValue();
-                xMin = finalNodeX -caseSize;
-                xMax = finalNodeX  - 20  ;
-                yMax = nodeY + caseSize - 40;
-                yMin = nodeY;
-                this.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (e.getX() >= finalNodeX -caseSize && e.getX() <= finalNodeX  - 20 &&
-                                e.getY() >= nodeY && e.getY() <= nodeY + caseSize - 40) {
-                            int confirm = JOptionPane.showConfirmDialog(null, "Do you want to remove this node?");
-                            if (confirm == JOptionPane.YES_OPTION) {
-                                delName = node.getValue();
-                                repaint();
-                            }
-                        }
-                    }
-                });
                 n = n.getNext();
             }
 
             if (test){
                 int lineY = y + caseSize / 2;
-                g2d.drawLine(nodeX, lineY + 20, nodeX, lineY - 20);
-                g2d.drawLine(nodeX, lineY + 10, nodeX + 10, lineY + 20);
-                g2d.drawLine(nodeX, lineY - 10, nodeX+ 10, lineY);
+                drawMsalha(g2d,lineY,nodeX);
             }
 
 

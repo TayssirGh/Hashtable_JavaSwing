@@ -61,19 +61,24 @@ public class Presentation {
                 drawComponent.setModel(drawComponent.getModel());
             }
         });
-
+        drawComponent.mouseAction();
         drawComponent.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getX() >= drawComponent.getxMin() && e.getX() <= drawComponent.getxMax()&&
-                        e.getY() >= drawComponent.getyMin() && e.getY() <= drawComponent.getyMax()){
-                    String name = drawComponent.getDelName();
-                    service.remove(name);
-                    drawComponent.setModel(drawComponent.getModel());
+                String delName = drawComponent.getDelName();
+                if (e.getX()<=drawComponent.getxMax() && e.getX()>= drawComponent.getxMin()&& e.getY()>=drawComponent.getyMin() && e.getY()<=drawComponent.getyMax()){
+                    if (delName != null) {
+                        if (drawComponent.isConfirmation()) {
+                            service.remove(delName);
+                            drawComponent.setModel(drawComponent.getModel());
+                            drawComponent.repaint();
+                        }
+                    }
                 }
 
             }
         });
+
         f.pack();
         f.setSize(700, 500);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
